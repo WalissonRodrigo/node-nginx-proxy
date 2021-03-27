@@ -1,0 +1,18 @@
+{
+  "name": "app",
+  "description": "Desafio Full Cycler para criar api node que comunicará com NGINX usando proxy reverso tudo usando docker.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Walisson Rodrigo",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.2"
+  },
+  "scripts": {
+    "dev": "npm install && nodemon --legacy-watch",
+    "start": "node ./index.js"
+  }
+}
