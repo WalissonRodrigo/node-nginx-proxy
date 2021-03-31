@@ -1,12 +1,31 @@
 version: '3'
 
 services:
+
+
+  mysql:    
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: mysql
+    restart: always
+    tty: true
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=peoples
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=fullcycler
+      - MYSQL_PASSWORD=fullcycler
+    networks:
+      - nodelan
   app:
     build:
       context: ./node
       dockerfile: Dockerfile.prod
     container_name: app
-    entrypoint: dockerize -wait tcp://nginx:80 -timeout 60s -wait tcp://mysql:3306 -timeout 60s docker-entrypoint.sh npm run dev
+    entrypoint: dockerize -wait tcp://mysql:3306 -timeout 30s docker-entrypoint.sh npm run dev
     networks:
       - nodelan
     volumes:
@@ -14,32 +33,23 @@ services:
     tty: true
     depends_on:
       - mysql
+  
   nginx:
     build:
       context: ./nginx
       dockerfile: Dockerfile.prod
     container_name: nginx
+    entrypoint: dockerize -wait tcp://app:3000 -timeout 45s nginx -g "daemon off;"
+    ## Line 40 simplify this two lines 42-43
+    # entrypoint: dockerize -wait tcp://app:3000 -timeout 45s
+    # command: ["nginx", "-g", "daemon off;"]
+    depends_on:
+      - app
     networks:
       - nodelan
     ports:
       - "80:80"
       - "8080:8080"
-    links:
-      - app
-  mysql:    
-    image: mysql:5.7
-    command: --innodb-use-native-aio=0
-    container_name: mysql
-    restart: always
-    tty: true
-    volumes:
-      - ./mysql:/var/lib/mysql
-    environment:
-      - MYSQL_DATABASE=peoples
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=mysql_user
-    networks:
-      - nodelan
 networks:
   nodelan:
     driver: bridge
