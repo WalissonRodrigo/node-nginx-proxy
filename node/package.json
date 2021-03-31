@@ -6,13 +6,14 @@
   "author": "Walisson Rodrigo",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
     "nodemon": "2.0.2"
   },
   "scripts": {
-    "dev": "npm install && nodemon --legacy-watch",
+    "dev": "nodemon --legacy-watch",
     "start": "node ./index.js"
   }
 }
