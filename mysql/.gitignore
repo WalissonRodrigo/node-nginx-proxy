@@ -1,0 +1,7 @@
+*
+*.*
+**.
+*/
+!.gitignore
+!peoples
+!peoples/*

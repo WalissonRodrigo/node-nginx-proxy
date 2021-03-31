@@ -6,12 +6,14 @@ services:
       context: ./node
       dockerfile: Dockerfile.prod
     container_name: app
-    entrypoint: dockerize -wait tcp://nginx:80 docker-entrypoint.sh npm run dev
+    entrypoint: dockerize -wait tcp://nginx:80 -timeout 60s -wait tcp://mysql:3306 -timeout 60s docker-entrypoint.sh npm run dev
     networks:
       - nodelan
     volumes:
       - ./node:/usr/src/app
     tty: true
+    depends_on:
+      - mysql
   nginx:
     build:
       context: ./nginx
@@ -21,8 +23,23 @@ services:
       - nodelan
     ports:
       - "80:80"
+      - "8080:8080"
     links:
       - app
+  mysql:    
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: mysql
+    restart: always
+    tty: true
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=peoples
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=mysql_user
+    networks:
+      - nodelan
 networks:
   nodelan:
     driver: bridge
