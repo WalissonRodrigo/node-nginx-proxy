@@ -8,8 +8,8 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
-# create a file php for nginx find a file php and not return 404 error
-RUN mkdir /var/www/html -p && touch /var/www/html/index.php && touch /var/www/html/index.html
+# create a file for nginx find a file web and not return 404 error
+RUN mkdir /var/www/html -p && touch /var/www/html/index.html
 
 # ENTRYPOINT [ "/docker-entrypoint.sh" ]
 #CMD ["nginx", "-g", "daemon off;"]

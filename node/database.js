@@ -34,7 +34,7 @@ async function seed() {
     const conn = await connect();
     const sqlInsert = `insert into people(name) values (?), (?), (?), (?);`;
     const values = [
-      "Walisson",
+      "Walisson Rodrigo",
       "Wesley Williams",
       "Luis Carlos",
       "Alunos FullCycler",
